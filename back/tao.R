@@ -43,100 +43,105 @@ maxPct = .04
 #indicators
 #add.indicator(strategy.st, name="lagATR", arguments=list(HLC=quote(HLC(mktdata)), n=period), label = "atrX")
 #add.indicator(strategy.st, name="RSI", arguments=list(price=quote(Cl(mktdata)), n=nRSI), label = "rsi")
+add.indicator(strategy.st, name="ADX", arguments=list(HLC=quote(HLC(mktdata)), n=14), label = "ADX")
+add.indicator(strategy.st, name="SMI", arguments=list(HLC=quote(HLC(mktdata)), n=13, nFast = 2, nSlow = 25, nSig = 9, maType = "EMA", bounded = TRUE), label = "SMI")
 add.indicator(strategy.st, name="EMA", arguments=list(x=quote(Cl(mktdata)), n=8), label = "8EMA")
 add.indicator(strategy.st, name="EMA", arguments=list(x=quote(Cl(mktdata)), n=21), label = "21EMA")
 add.indicator(strategy.st, name="EMA", arguments=list(x=quote(Cl(mktdata)), n=34), label = "34EMA")
 add.indicator(strategy.st, name="EMA", arguments=list(x=quote(Cl(mktdata)), n=55), label = "55EMA")
 add.indicator(strategy.st, name="EMA", arguments=list(x=quote(Cl(mktdata)), n=89), label = "89EMA")
 
-#signals
-add.signal(strategy.st, name = "sigComparison", 
-           arguments=list(columns=c("lose", "filterMA"), relationship="gt"), 
-           label="upTrend")
+test <- applyIndicators(strategy.st, mktdata=OHLC(SPY))
+tail(test, 12)
 
-add.signal(strategy.st, name = "sigThreshold", 
-           arguments=list(column="rsi", threshold=thresh1, 
-                          relationship="lt", cross=FALSE), 
-           label = "rsiThresh1")
-
-add.signal(strategy.st, name = "sigThreshold", 
-           arguments=list(column="rsi", threshold=thresh2, 
-                          relationship="lt", cross=FALSE), 
-           label="rsiThresh2")
-
-add.signal(strategy.st, name = "sigAND", 
-           arguments=list(columns=c("rsiThresh1", "upTrend"), cross=TRUE), 
-           label="longEntry1")
-
-add.signal(strategy.st, name = "sigAND", 
-           arguments=list(columns=c("rsiThresh2", "upTrend"), cross=TRUE), 
-           label="longEntry2")
-
-add.signal(strategy.st, name = "sigCrossover", 
-           arguments=list(columns=c("close", "quickMA"), relationship="gt"), 
-           label="exitLongNormal")
-
-add.signal(strategy.st, name = "sigCrossover", 
-           arguments=list(columns=c("close", "filterMA"), relationship="lt"), 
-           label="exitLongFilter")
-
-#rules
-add.rule(strategy.st, name="ruleSignal",
-         arguments=list(sigcol="longEntry1",
-                        sigval=TRUE,
-                        ordertype="market",
-                        orderside="long",
-                        replace=FALSE,
-                        prefer="Open",
-                        osFUN=osDollarATR,
-                        tradeSize=tradeSize,
-                        pctATR=pctATR,
-                        maxPctATR=maxPct,
-                        atrMod="X"),
-         type="enter", path.dep=TRUE, label="enterLong1")
-
-add.rule(strategy.st, name="ruleSignal",
-         arguments=list(sigcol="longEntry2",
-                        sigval=TRUE,
-                        ordertype="market",
-                        orderside="long",
-                        replace=FALSE,
-                        prefer="Open",
-                        osFUN=osDollarATR,
-                        tradeSize=tradeSize,
-                        pctATR=pctATR,
-                        maxPctATR=maxPct,
-                        atrMod="X"),
-         type="enter", path.dep=TRUE, label="enterLong2")
-add.rule(strategy.st, name="ruleSignal",
-         arguments=list(sigcol="exitLongNormal",
-                        sigval=TRUE,
-                        orderqty="all",
-                        ordertype="market",
-                        orderside="long",
-                        replace=FALSE,
-                        prefer="Open"),
-         type="exit", path.dep=TRUE, label="normalExitLong")
-
-add.rule(strategy.st, name="ruleSignal",
-         arguments=list(sigcol="exitLongFilter",
-                        sigval=TRUE,
-                        orderqty="all",
-                        ordertype="market",
-                        orderside="long",
-                        replace=FALSE,
-                        prefer="Open"),
-         type="enter", path.dep=TRUE, label="filterExitLong")
-
-t1 <- Sys.time()
-out <- applyStrategy(strategy=strategy.st, portfolios=portfolio.st)
-t2 <- Sys.time()
-print(t2-t1)
-
-updatePortf(portfolio.st)
-dateRange <- time(getPortfolio(portfolio.st)$summary)[-1]
-updateAcct(portfolio.st,dateRange)
-updateEndEq(account.st)
-
-args(durationStatistics)
-durationStatistics(Portfolio=portfolio.st, Symbols=symbols)
+# #signals
+# add.signal(strategy.st, name = "sigComparison", 
+#            arguments=list(columns=c("lose", "filterMA"), relationship="gt"), 
+#            label="upTrend")
+# 
+# add.signal(strategy.st, name = "sigThreshold", 
+#            arguments=list(column="rsi", threshold=thresh1, 
+#                           relationship="lt", cross=FALSE), 
+#            label = "rsiThresh1")
+# 
+# add.signal(strategy.st, name = "sigThreshold", 
+#            arguments=list(column="rsi", threshold=thresh2, 
+#                           relationship="lt", cross=FALSE), 
+#            label="rsiThresh2")
+# 
+# add.signal(strategy.st, name = "sigAND", 
+#            arguments=list(columns=c("rsiThresh1", "upTrend"), cross=TRUE), 
+#            label="longEntry1")
+# 
+# add.signal(strategy.st, name = "sigAND", 
+#            arguments=list(columns=c("rsiThresh2", "upTrend"), cross=TRUE), 
+#            label="longEntry2")
+# 
+# add.signal(strategy.st, name = "sigCrossover", 
+#            arguments=list(columns=c("close", "quickMA"), relationship="gt"), 
+#            label="exitLongNormal")
+# 
+# add.signal(strategy.st, name = "sigCrossover", 
+#            arguments=list(columns=c("close", "filterMA"), relationship="lt"), 
+#            label="exitLongFilter")
+# 
+# #rules
+# add.rule(strategy.st, name="ruleSignal",
+#          arguments=list(sigcol="longEntry1",
+#                         sigval=TRUE,
+#                         ordertype="market",
+#                         orderside="long",
+#                         replace=FALSE,
+#                         prefer="Open",
+#                         osFUN=osDollarATR,
+#                         tradeSize=tradeSize,
+#                         pctATR=pctATR,
+#                         maxPctATR=maxPct,
+#                         atrMod="X"),
+#          type="enter", path.dep=TRUE, label="enterLong1")
+# 
+# add.rule(strategy.st, name="ruleSignal",
+#          arguments=list(sigcol="longEntry2",
+#                         sigval=TRUE,
+#                         ordertype="market",
+#                         orderside="long",
+#                         replace=FALSE,
+#                         prefer="Open",
+#                         osFUN=osDollarATR,
+#                         tradeSize=tradeSize,
+#                         pctATR=pctATR,
+#                         maxPctATR=maxPct,
+#                         atrMod="X"),
+#          type="enter", path.dep=TRUE, label="enterLong2")
+# add.rule(strategy.st, name="ruleSignal",
+#          arguments=list(sigcol="exitLongNormal",
+#                         sigval=TRUE,
+#                         orderqty="all",
+#                         ordertype="market",
+#                         orderside="long",
+#                         replace=FALSE,
+#                         prefer="Open"),
+#          type="exit", path.dep=TRUE, label="normalExitLong")
+# 
+# add.rule(strategy.st, name="ruleSignal",
+#          arguments=list(sigcol="exitLongFilter",
+#                         sigval=TRUE,
+#                         orderqty="all",
+#                         ordertype="market",
+#                         orderside="long",
+#                         replace=FALSE,
+#                         prefer="Open"),
+#          type="enter", path.dep=TRUE, label="filterExitLong")
+# 
+# t1 <- Sys.time()
+# out <- applyStrategy(strategy=strategy.st, portfolios=portfolio.st)
+# t2 <- Sys.time()
+# print(t2-t1)
+# 
+# updatePortf(portfolio.st)
+# dateRange <- time(getPortfolio(portfolio.st)$summary)[-1]
+# updateAcct(portfolio.st,dateRange)
+# updateEndEq(account.st)
+# 
+# args(durationStatistics)
+# durationStatistics(Portfolio=portfolio.st, Symbols=symbols)
