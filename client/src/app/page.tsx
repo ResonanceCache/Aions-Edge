@@ -12,7 +12,7 @@ export default async function Home() {
     <HydrateClient>
 
       <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-        Aion's Edge
+        Aion&apos;s Edge
       </h1>
 
     </HydrateClient>
