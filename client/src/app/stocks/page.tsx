@@ -4,7 +4,7 @@ export default async function Home() {
   return (
     <HydrateClient>
       <div className="min-h-full">
-        Home
+        List stocks here
       </div>
     </HydrateClient>
   );
