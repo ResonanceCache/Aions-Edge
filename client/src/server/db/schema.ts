@@ -40,6 +40,25 @@ export const posts = createTable(
   })
 );
 
+export const stocks = createTable(
+  "stock",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    ticker: varchar("ticker", { length: 16 }),
+    createdById: varchar("created_by", { length: 255 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date()
+    ),
+  },
+  (example) => ({
+    tickerIndex: index("ticker_idx").on(example.ticker),
+  })
+);
+
 export const users = createTable("user", {
   id: varchar("id", { length: 255 })
     .notNull()
