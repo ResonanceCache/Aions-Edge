@@ -21,18 +21,10 @@ export const stockRouter = createTRPCRouter({
             const result = await ctx.db.select().from(stocks).execute();
             return result;
         }),
-    // update: publicProcedure
-    //     .input(z.object({ ticker: z.string().min(1), name: z.string() }))
-    //     .mutation(async ({ ctx, input }) => {
-    //         try {
-    //             const result = await ctx.db.update(stocks)
-    //                 .set({ name: input.name })
-    //                 .where({ ticker: input.ticker })
-    //                 .execute();
-    //             return result;
-    //         } catch (error) {
-    //             console.error("Error updating stock:", error);
-    //             throw new Error("Failed to update stock.");
-    //         }
-    //     }),
+    getByTicker: publicProcedure
+        .input(z.object({ ticker: z.string().min(1) }))
+        .query(async ({ ctx, input }) => {
+            const result = await ctx.db.select().from(stocks).where({ ticker: input.ticker }).execute();
+            return result;
+        }),
 });

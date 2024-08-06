@@ -1,12 +1,37 @@
-import { HydrateClient } from "~/trpc/server";
+'use client';
 
-export default async function Home() {
+import { type FunctionComponent, type ReactElement, useState } from "react";
+
+export const Home: FunctionComponent = (): ReactElement => {
+
+  const [inputValue, setInputValue] = useState("");
+
   return (
-    <HydrateClient>
-      <div className="min-h-full">
-        Aions Edge
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      if (inputValue) {
+        window.location.href = `/stocks/${inputValue}`;
+      }
+    }}>
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-row justify-center items-center">
+          <h1 className="text-4xl text-center">Type a company to get started</h1>
+          <br />
+          <input
+            className="border border-gray-300 rounded-md px-4 py-2"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Go
+          </button>
+        </div>
       </div>
-    </HydrateClient>
+    </form>
   );
-}
+};
+
+
+
+export default Home;
 
