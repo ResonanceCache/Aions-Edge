@@ -21,10 +21,10 @@ export const stockRouter = createTRPCRouter({
             const result = await ctx.db.select().from(stocks).execute();
             return result;
         }),
-    getByTicker: publicProcedure
-        .input(z.object({ ticker: z.string().min(1) }))
-        .query(async ({ ctx, input }) => {
-            const result = await ctx.db.select().from(stocks).where({ ticker: input.ticker }).execute();
-            return result;
-        }),
+    // getByTicker: publicProcedure
+    //     .input(z.object({ ticker: z.string().min(1) }))
+    //     .query(async ({ ctx, input }) => {
+    //         const result = await ctx.db.select().from(stocks).where({ ticker: input.ticker }).execute();
+    //         return result;
+    //     }),
 });

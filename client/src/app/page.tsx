@@ -1,8 +1,8 @@
 'use client';
 
-import { type FunctionComponent, type ReactElement, useState } from "react";
+import {useState } from "react";
 
-export const Home: FunctionComponent = (): ReactElement => {
+export default function Home() {
 
   const [inputValue, setInputValue] = useState("");
 
@@ -30,8 +30,3 @@ export const Home: FunctionComponent = (): ReactElement => {
     </form>
   );
 };
-
-
-
-export default Home;
-
